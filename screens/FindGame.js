@@ -26,7 +26,9 @@ const FindGame = (props) => {
     if (!props.location.coords) {
       props.navigation.navigate("SettingsTab");
     } else {
+      console.log("games loading..");
       getGames().then((result) => {
+        console.log("getting games");
         const newResult = result.map((game) => {
           game.dist = distance(
             props.location.coords.latitude,

@@ -30,12 +30,11 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Home",
           tabBarLabel: "Home",
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons
               name="md-home"
               size={23}
               style={{ marginBottom: -3 }}
-              focused={focused}
               color={color}
             />
           ),
@@ -47,12 +46,11 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Find Player",
           tabBarLabel: "Players",
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons
               name="md-person"
               size={23}
               style={{ marginBottom: -3 }}
-              focused={focused}
               color={color}
             />
           ),
@@ -64,12 +62,11 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Find Game",
           tabBarLabel: "Games",
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons
               name="md-people"
               size={23}
               style={{ marginBottom: -3 }}
-              focused={focused}
               color={color}
             />
           ),
@@ -81,12 +78,11 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: "Find Match",
           tabBarLabel: "Matches",
-          tabBarIcon: ({ focused, color }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons
               name="md-people"
               size={23}
               style={{ marginBottom: -3 }}
-              focused={focused}
               color={color}
             />
           ),

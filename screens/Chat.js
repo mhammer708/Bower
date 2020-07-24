@@ -10,13 +10,12 @@ import { firebaseService } from "../Firebase";
 
 function Chat(props) {
   const user = props.user;
-  const matchId = props.matchId;
   const [messages, dispatchMessages] = useReducer(messagesReducer, []);
 
   useEffect(
     function () {
-      return firebaseService.messageRef
-        .doc(matchId)
+      return firebaseService.matchesRef
+        .doc(props.route.params.id)
         .collection("Messages")
         .orderBy("created_at", "desc")
         .onSnapshot(function (snapshot) {
@@ -45,7 +44,7 @@ function Chat(props) {
       </View>
 
       <View style={styles.inputContainer}>
-        <Input />
+        <Input matchId={props.route.params.id} />
       </View>
     </View>
   );

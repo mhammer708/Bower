@@ -1,4 +1,4 @@
-import { getPlayers } from "../Firebase";
+import { getMatches, getPlayers, getGames } from "../Firebase";
 import React, { Component, useEffect, useState } from "react";
 import {
   StatusBar,
@@ -14,33 +14,51 @@ import distance from "../utils/distance";
 import { connect } from "react-redux";
 
 const FindMatch = (props) => {
-  let [players, setPlayers] = useState([]);
+  let [matchIds, setMatchIds] = useState([]);
+  let [matches, setMatches] = useState([]);
   let [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (!props.location.coords) {
       props.navigation.navigate("SettingsTab");
     } else {
-      getPlayers().then((result) => {
-        const newResult = result.map((player) => {
-          player.dist = distance(
-            props.location.coords.latitude,
-            props.location.coords.longitude,
-            player.location[0],
-            player.location[1]
-          );
-          return player;
+      getMatches(props.userType, props.docId)
+        .then((res) => {
+          setMatchIds(res);
+          console.log("usertype", props.userType);
+          if (props.userType === "Player") return getGames();
+          if (props.userType === "Game") return getPlayers();
+        })
+        .then((res) => {
+          console.log("games", res);
+          const newResult = res
+            .filter((y) => y.matches.some((x) => x.partnerId === props.docId))
+            .map((match, ind) => {
+              match.dist = distance(
+                props.location.coords.latitude,
+                props.location.coords.longitude,
+                match.location[0],
+                match.location[1]
+              );
+              console.log("MATCHIDS", matchIds);
+              match.matches.forEach((el) => {
+                if (el.partnerId === props.docId) {
+                  match.matchId = el.matchId;
+                }
+              });
+              return match;
+            });
+          console.log("MATCHES", newResult);
+          setMatches(newResult);
         });
-        setPlayers(newResult);
-      });
     }
   }, []);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     try {
-      getPlayers().then((result) => {
-        setPlayers(result);
+      getMatches(props.userType, props.docId).then((res) => {
+        setMatches(res);
       });
       setRefreshing(false);
     } catch (error) {
@@ -49,11 +67,14 @@ const FindMatch = (props) => {
   }, [refreshing]);
 
   const _onSelectPlayer = (id) => {
-    props.navigation.navigate("SelectPlayer", { id: id });
+    props.navigation.navigate("Chat", { id: id });
   };
 
   const _renderItem = ({ item }) => (
-    <TouchableOpacity key={item.id} onPress={() => _onSelectPlayer(item.id)}>
+    <TouchableOpacity
+      key={item.matchId}
+      onPress={() => _onSelectPlayer(item.matchId)}
+    >
       <View style={styles.rowContainer}>
         <View style={styles.thumbnail}>
           <Text style={styles.title} numberOfLines={1}>
@@ -64,12 +85,12 @@ const FindMatch = (props) => {
           </Text>
         </View>
         <View style={styles.rowText}>
-          <Text style={styles.name} numberOfLines={1} ellipsizeMode={"tail"}>
+          {/* <Text style={styles.name} numberOfLines={1} ellipsizeMode={"tail"}>
             {item.name} ({item.skill})
-          </Text>
-          <Text style={styles.bio} numberOfLines={1} ellipsizeMode={"tail"}>
-            {item.bio}
-          </Text>
+          </Text> */}
+          {/* <Text style={styles.bio} numberOfLines={1} ellipsizeMode={"tail"}>
+            {item.matchId}
+          </Text> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -79,11 +100,11 @@ const FindMatch = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Players Near You</Text>
+      <Text style={styles.header}>Your Matches</Text>
       <StatusBar barStyle="light-content" />
-      {players.length ? (
+      {matches.length ? (
         <FlatList
-          data={players}
+          data={matches}
           keyExtractor={_keyExtractor}
           renderItem={_renderItem}
           refreshControl={
@@ -97,6 +118,8 @@ const FindMatch = (props) => {
 
 const stateToProps = (state) => ({
   location: state.location,
+  docId: state.docId,
+  userType: state.userType,
 });
 
 export default connect(stateToProps)(FindMatch);

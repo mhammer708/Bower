@@ -39,7 +39,7 @@ const Home = (props) => {
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
       }
-
+      console.log("getting location..");
       let locationObj = await Location.getCurrentPositionAsync({});
       setLocationObj(locationObj);
     })();
@@ -52,6 +52,7 @@ const Home = (props) => {
   let text = "Waiting..";
 
   if (errorMsg) {
+    console.log(errorMsg);
     text = errorMsg;
   } else if (locationObj) {
     text = JSON.stringify(locationObj);
