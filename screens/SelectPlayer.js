@@ -7,10 +7,16 @@ import {
   Button,
   Image,
 } from "react-native";
-import { getSinglePlayer } from "../Firebase";
+import { getSinglePlayer, firebaseService } from "../Firebase";
+import { connect } from "react-redux";
+import WideButton from "../components/fullWidthButton";
 
 const SelectPlayer = (props) => {
   let [playerInfo, setPlayerInfo] = useState({});
+  let [userIdObj, setUserIdObj] = useState({
+    player: props.route.params.id,
+    game: props.docId,
+  });
 
   useEffect(() => {
     console.log(props);
@@ -18,6 +24,16 @@ const SelectPlayer = (props) => {
       setPlayerInfo(result)
     );
   }, []);
+
+  const handlePress = () => {
+    firebaseService.create(userIdObj).then((res) => {
+      console.log("MATCH ID >>", res);
+      props.navigation.navigate("MatchesTab", {
+        screen: "Chat",
+        params: { id: res },
+      });
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -39,37 +55,11 @@ const SelectPlayer = (props) => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableHighlight
-              style={styles.fullWidthButton}
-              onPress={() => props.navigation.navigate("FindPlayer")}
-            >
-              <Text style={styles.fullWidthButtonText}>Return</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-              style={styles.fullWidthButton}
-              onPress={() => console.log(props.route.params.id)}
-            >
-              <Text style={styles.fullWidthButtonText}>Invite</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-              style={styles.fullWidthButton}
-              onPress={() => props.navigation.navigate("Chat")}
-            >
-              <Text style={styles.fullWidthButtonText}>Chat</Text>
-            </TouchableHighlight>
-
-            {/* <Button
-              style={styles.button}
-              onPress={() => props.navigation.navigate("FindPlayer")}
-              title="Return"
+            <WideButton
+              press={() => props.navigation.navigate("FindPlayer")}
+              text="Return"
             />
-            <Button
-              style={styles.button}
-              onPress={() => console.log(props.route.params.id)}
-              title="Invite"
-            /> */}
+            <WideButton press={() => handlePress()} text="Invite" />
           </View>
         </View>
       )}
@@ -77,35 +67,27 @@ const SelectPlayer = (props) => {
   );
 };
 
-export default SelectPlayer;
+const stateToProps = (state) => ({
+  location: state.location,
+  docId: state.docId,
+});
+
+export default connect(stateToProps)(SelectPlayer);
 
 const styles = StyleSheet.create({
-  fullWidthButton: {
-    backgroundColor: "blue",
-    height: 50,
-    marginTop: 10,
-    width: "45%",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  fullWidthButtonText: {
-    fontSize: 24,
-    color: "white",
-  },
-  textContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-  },
   buttonContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
+    flex: 1,
+  },
+  textContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
   },
   header: {
@@ -150,9 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F5FCFF",
-  },
-  button: {
-    fontSize: 25,
   },
   title: {
     fontSize: 20,

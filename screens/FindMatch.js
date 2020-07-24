@@ -66,14 +66,14 @@ const FindMatch = (props) => {
     }
   }, [refreshing]);
 
-  const _onSelectPlayer = (id) => {
+  const _onSelectMatch = (id) => {
     props.navigation.navigate("Chat", { id: id });
   };
 
   const _renderItem = ({ item }) => (
     <TouchableOpacity
       key={item.matchId}
-      onPress={() => _onSelectPlayer(item.matchId)}
+      onPress={() => _onSelectMatch(item.matchId)}
     >
       <View style={styles.rowContainer}>
         <View style={styles.thumbnail}>

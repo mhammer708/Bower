@@ -32,11 +32,6 @@ const FindPlayerStack = () => {
         component={SelectPlayer}
         options={{ title: "Select Player", tabBarVisible: false }}
       />
-      <Stack.Screen
-        name="Chat"
-        component={Chat}
-        options={{ title: "Chat", tabBarVisible: false }}
-      />
     </Stack.Navigator>
   );
 };

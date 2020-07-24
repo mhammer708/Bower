@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from "react";
-import { FlatList, SafeAreaView, View, StyleSheet } from "react-native";
+import { FlatList, SafeAreaView, View, StyleSheet, Button } from "react-native";
 
 import Input from "../components/chatInput";
 import Message from "../components/chatBubble";
@@ -7,6 +7,7 @@ import Message from "../components/chatBubble";
 import { unionWith } from "lodash";
 import { connect } from "react-redux";
 import { firebaseService } from "../Firebase";
+import WideButton from "../components/fullWidthButton";
 
 function Chat(props) {
   const user = props.user;
@@ -45,7 +46,15 @@ function Chat(props) {
 
       <View style={styles.inputContainer}>
         <Input matchId={props.route.params.id} />
+
+        {/* <Button onPress={() => props.navigation.navigate("FindMatch")}>
+          Return
+        </Button> */}
       </View>
+      <WideButton
+        text={"Return"}
+        press={() => props.navigation.navigate("FindMatch")}
+      />
     </View>
   );
 }

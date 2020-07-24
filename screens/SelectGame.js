@@ -31,6 +31,16 @@ const SelectGame = (props) => {
     });
   }, []);
 
+  const handlePress = () => {
+    firebaseService.create(userIdObj).then((res) => {
+      console.log("MATCH ID >>", res);
+      props.navigation.navigate("MatchesTab", {
+        screen: "Chat",
+        params: { id: res },
+      });
+    });
+  };
+
   return (
     <View style={styles.container}>
       {gameInfo.players && (
@@ -80,7 +90,7 @@ const SelectGame = (props) => {
 
             <TouchableHighlight
               style={styles.fullWidthButton}
-              onPress={() => firebaseService.create(userIdObj)}
+              onPress={() => handlePress()}
             >
               <Text style={styles.fullWidthButtonText}>Invite</Text>
             </TouchableHighlight>

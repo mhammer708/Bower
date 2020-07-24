@@ -1,15 +1,8 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import CreateGame from "../screens/CreateGame";
-import CreatePlayer from "../screens/CreatePlayer";
-import Home from "../screens/Home";
-import FindPlayer from "../screens/FindPlayer";
-import FindGame from "../screens/FindGame";
-import SelectPlayer from "../screens/SelectPlayer";
 import FindPlayerStack from "./PlayerNavigator";
 import FindGameStack from "./GameNavigator";
 import SettingsStack from "./SettingsNavigator";
